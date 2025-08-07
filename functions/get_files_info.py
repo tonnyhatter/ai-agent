@@ -1,6 +1,7 @@
 import os
 import subprocess
 from config import MAX_CHARACTERS
+from google.genai import types
 
 def get_files_info(working_directory, directory="."):
     try:
@@ -85,3 +86,68 @@ def run_python_file(working_directory, file_path, args=[]):
         return f"STDOUT: {result.stdout} \nSTDERR: {result.stderr}"
     except Exception as e:
         return f"Error: executing Python file: {e}"
+    
+schema_get_files_info = types.FunctionDeclaration(
+    name="get_files_info",
+    description="Lists files in the specified directory along with their sizes, constrained to the working directory.",
+    parameters=types.Schema(
+        type=types.Type.OBJECT,
+        properties={
+            "directory": types.Schema(
+                type=types.Type.STRING,
+                description="The directory to list files from, relative to the working directory. If not provided, lists files in the working directory itself.",
+            ),
+        },
+    ),
+)
+
+schema_get_file_content = types.FunctionDeclaration(
+    name="get_file_content",
+    description="Display the contents of the specified file, constrained to the first 10000 characters.",
+    parameters=types.Schema(
+        type=types.Type.OBJECT,
+        properties={
+            "file_path": types.Schema(
+                type=types.Type.STRING,
+                description="The file to display, relative to the working directory. If over 10000 characters, truncates file to 10000 characters.",
+            ),
+        },
+    ),
+)
+
+schema_run_python_file = types.FunctionDeclaration(
+    name="run_python_file",
+    description="Runs the specified python file along with specified args, constrained to the working directory.",
+    parameters=types.Schema(
+        type=types.Type.OBJECT,
+        properties={
+            "file_path": types.Schema(
+                type=types.Type.STRING,
+                description="The name of the file to run, relative to the working directory.",
+            ),
+            "args[]": types.Schema(
+                type=types.Type.ARRAY,
+                description="A list of arguments to pass to the Python file.",
+                items=types.Schema(type=types.Type.STRING)
+            ),
+        },
+    ),
+)
+
+schema_write_file = types.FunctionDeclaration(
+    name="write_file",
+    description="Writes content to the specified file, constrained to the working directory.",
+    parameters=types.Schema(
+        type=types.Type.OBJECT,
+        properties={
+            "file_path": types.Schema(
+                type=types.Type.STRING,
+                description="The name of the file to write, relative to the working directory.",
+            ),
+            "content": types.Schema(
+                type=types.Type.STRING,
+                description="The content to write to the file.",
+            ),
+        },
+    ),
+)
