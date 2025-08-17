@@ -86,7 +86,7 @@ def run_python_file(working_directory, file_path, args=[]):
         return f"STDOUT: {result.stdout} \nSTDERR: {result.stderr}"
     except Exception as e:
         return f"Error: executing Python file: {e}"
-    
+       
 schema_get_files_info = types.FunctionDeclaration(
     name="get_files_info",
     description="Lists files in the specified directory along with their sizes, constrained to the working directory.",
@@ -117,7 +117,7 @@ schema_get_file_content = types.FunctionDeclaration(
 
 schema_run_python_file = types.FunctionDeclaration(
     name="run_python_file",
-    description="Runs the specified python file along with specified args, constrained to the working directory.",
+    description="Executes a Python file within the working directory and returns the output from the interpreter.",
     parameters=types.Schema(
         type=types.Type.OBJECT,
         properties={
@@ -127,7 +127,7 @@ schema_run_python_file = types.FunctionDeclaration(
             ),
             "args[]": types.Schema(
                 type=types.Type.ARRAY,
-                description="A list of arguments to pass to the Python file.",
+                description="Optional arguments to pass to the Python file.",
                 items=types.Schema(type=types.Type.STRING)
             ),
         },
